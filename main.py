@@ -9,6 +9,9 @@ class Employee():
 class HashTable():
     def __init__(self) -> None:
         self.storage = dict()
+        
+    def __str__(self) -> str:
+        return str(self.storage)
     
     def hash(self, key: int) -> int:
         return key % 10
@@ -21,6 +24,16 @@ class HashTable():
         else:
             self.storage[index] = [value]
             
+    def delete(self, key: int) -> None:
+        index = self.hash(key)
+        
+        if index in self.storage:
+            for employee in self.storage[index]:
+                if employee.id == key:
+                    self.storage[index].remove(employee)
+            else:            
+                raise Exception('Employee not found')
+            
     def search(self, key: int) -> Employee or int:
         index = self.hash(key)
         
@@ -28,14 +41,22 @@ class HashTable():
             for employee in self.storage[index]:
                 if employee.id == key:
                     return employee
-                else:
-                    return -1
-        
+                
+            else:
+                return -1
+
 if __name__ == '__main__':
     storage = dict()
     hash_table = HashTable()
     
-    for i in range(10):
-        hash_table.push(Employee(i, f"Funcionario{i}"))
+    for i in range(20):
+        hash_table.push(Employee(i, f"Fulano"))
         
-    print(hash_table.search(15))
+
+    try:
+        print(hash_table.search(16))
+        print(hash_table.search(4))
+        hash_table.delete(4)
+        print(hash_table.search(4))
+    except Exception as e:
+        print(e)
